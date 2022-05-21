@@ -7,19 +7,20 @@ $skills = new \Xenokore\OSRS\StatsGenerator\Skills();
 
 if(isset($_GET['user']) && \is_string($_GET['user'])) {
 
-    $url = 'http://services.runescape.com/m=hiscore_oldschool/index_lite.ws?player=' . $_GET['user'];
-    
-    $curl = \curl_init();
-    \curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+	$url = 'http://services.runescape.com/m=hiscore_oldschool/index_lite.ws?player=' . \urlencode($_GET['user']);
+	
+	$curl = \curl_init();
+	\curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
     \curl_setopt($curl, CURLOPT_HEADER, false);
     \curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
     \curl_setopt($curl, CURLOPT_URL, $url);
     \curl_setopt($curl, CURLOPT_REFERER, $url);
-    \curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    $get = \curl_exec($curl);
-    \curl_close($curl);
-    
-    if(empty($get)) {
+    \curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+	$get = \curl_exec($curl); 
+	$http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+	\curl_close($curl);
+	
+    if($http_code === 404 || empty($get)) {
         die('user not found');
     }
 
