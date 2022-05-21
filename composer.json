@@ -1,8 +1,17 @@
 {
     "name": "xenokore/osrs-stats-generator",
-    "description": "OSRS stats image generator library",
+    "version": "0.1",
     "type": "library",
+    "description": "OSRS stats image generator library",
     "license": "MIT",
+    ,
+    "homepage": "https://github.com/yani/osrs-stats-generator",
+    "keywords": [
+        "osrs",
+        "stats",
+        "image",
+        "generator"
+    ],
     "authors": [
         {
             "name": "Yani",
@@ -13,7 +22,11 @@
         "psr-4": {
             "Xenokore\\OSRS\\StatsGenerator\\": "src/"
         },
-        "classmap": ["src/"]
+        "classmap": [
+            "src/"
+        ]
     },
-    "require": {}
+    "require": {
+        "ext-gd": "*"
+    }
 }
