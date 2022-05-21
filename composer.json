@@ -1,0 +1,19 @@
+{
+    "name": "xenokore/osrs-stats-generator",
+    "description": "OSRS stats image generator library",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Yani",
+            "email": "yani@xenokore.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Xenokore\\OSRS\\StatsGenerator\\": "src/"
+        },
+        "classmap": ["src/"]
+    },
+    "require": {}
+}
