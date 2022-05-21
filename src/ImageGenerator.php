@@ -34,7 +34,7 @@ class ImageGenerator
         // create the color for the text
         $yellow = \imagecolorallocate($img, 255, 255, 51);
 
-        $skills = $this->skills->getAllSkillLevels();
+        $skills = $this->skills->getAllSkills();
 
         \imagettftext($img, 8, 0, 36+(0*62), 15+(0*32), $yellow, $font, $skills['attack'][0]);
         \imagettftext($img, 8, 0, 49+(0*62), 28+(0*32), $yellow, $font, $skills['attack'][1]);
@@ -120,8 +120,8 @@ class ImageGenerator
         \ob_start();
         \imagepng($img);
         \imagedestroy($img);
-        $img_data = \ob_get_contents(); // read from buffer
-        \ob_end_clean(); // delete buffer
+        $img_data = \ob_get_contents();
+        \ob_end_clean();
 
         return $img_data;
     }

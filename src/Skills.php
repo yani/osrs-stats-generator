@@ -99,17 +99,17 @@ class Skills
         return $total;
     }
 
-    public function getSkillLevels(string $skill): array
+    public function getSkill(string $skill): array
     {
         if(!isset($this->skills[$skill])) {
-            throw new \Exception("invalid skill: *skill*");
+            throw new \Exception("invalid skill: *$skill*");
             return 0;
         }
 
         return $this->skills[$skill];
     }
 
-    public function getAllSkillLevels(): array
+    public function getAllSkills(): array
     {
         $skills = $this->skills;
         $skills['total'] = $this->getTotal();
