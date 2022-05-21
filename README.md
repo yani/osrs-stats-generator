@@ -24,8 +24,6 @@ User can be looked up from highscores:
 
 ### Library usage
 
-Skills can be set manually.
-
 ```php
 // Either set skills using (array)[<current_lvl>, <max_lvl>] or (string)<level>.
 // Skills are defaulted to their lowest lvl (1 and 10 for hitpoint) and are not required to be set.
@@ -78,6 +76,10 @@ construction
 ```
 
 Total level is calculated automatically. 
+
+### Example
+
+![image](https://user-images.githubusercontent.com/6956790/169636088-497a0630-f68f-4a14-b1a4-3e658b5ccfa3.png)
 
 ### License
 
