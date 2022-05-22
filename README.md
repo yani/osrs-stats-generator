@@ -11,12 +11,12 @@ composer require xenokore/osrs-stats-generator
 
 Image generation uses the PHP extension `gd`.
 
-There's a public script included which uses the `cURL` extension to look up a user from the highscores.
+There's an endpoint script included which uses the `cURL` extension to look up a user from the highscores.
 cURL is not required if using the library directly in your project.
 
 ### Usage
 
-You can use the public script to look up a user from the highscores from your browser:
+You can use the endpoint script to look up a user from the highscores from your browser:
 
 ```php
 /public/index.php?user=noize
