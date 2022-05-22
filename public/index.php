@@ -1,14 +1,22 @@
 <?php
+/**
+ * Public endpoint for OSRS Stats Image Generator
+ */
 
-require_once __DIR__ . '/../src/ImageGenerator.php';
-require_once __DIR__ . '/../src/Skills.php';
+// Load library
+if (\file_exists(__DIR__ . '/../vendor/autoload.php')) {
+    include_once __DIR__ . '/../vendor/autoload.php';
+} else {
+    include_once __DIR__ . '/../src/ImageGenerator.php';
+    include_once __DIR__ . '/../src/Skills.php';
+}
 
 $skills = new \Xenokore\OSRS\StatsGenerator\Skills();
 
 if (isset($_GET['user']) && \is_string($_GET['user'])) {
 
-    $url = 'http://services.runescape.com/m=hiscore_oldschool/index_lite.ws?player=' . \urlencode($_GET['user']);
-    
+    // Request highscore data
+    $url = 'https://services.runescape.com/m=hiscore_oldschool/index_lite.ws?player=' . \urlencode($_GET['user']);
     $curl = \curl_init();
     \curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
     \curl_setopt($curl, CURLOPT_HEADER, false);
@@ -16,17 +24,18 @@ if (isset($_GET['user']) && \is_string($_GET['user'])) {
     \curl_setopt($curl, CURLOPT_URL, $url);
     \curl_setopt($curl, CURLOPT_REFERER, $url);
     \curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    $get = \curl_exec($curl); 
+    $http_response_body = \curl_exec($curl); 
     $http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
     \curl_close($curl);
     
-    if($http_code === 404 || empty($get)) {
+    // Make sure user is found
+    if ($http_code === 404 || empty($http_response_body)) {
         die('user not found');
     }
 
-    $get = \explode("\n", $get);
+    $highscore_data = \explode("\n", $http_response_body);
 
-    $i=1;
+    $i = 1;
 
     foreach ([
         "total", "attack", "defence", 
@@ -38,26 +47,32 @@ if (isset($_GET['user']) && \is_string($_GET['user'])) {
         "slayer", "farming", "runecraft", 
         "hunter", "construction"
     ] as $skill) {
-        if($skill === 'total') {
+
+        // Skip total level because it's calculated automatically
+        if ($skill === 'total') {
             continue;
         }
-        if($skill === 'runecrafting') {
+
+        // Fix wrong skill names
+        if ($skill === 'runecrafting') {
             $skill = 'runecraft';
         }
-        if($skill === 'hp' || $skill === 'constitution') {
+        if ($skill === 'hp' || $skill === 'constitution') {
             $skill = 'hitpoints';
         }
         
-        $temp  = explode(",", $get[$i++]);
+        // Get skill level
+        $temp  = \explode(",", $highscore_data[$i++]);
         $level = (empty($temp[0]))?'':$temp[1];
+
+        // Set skill level
         $skills->setSkill($skill, $level);
     }
 } else {
     $skills->setSkills($_GET);
 }
 
-$img_gen = new \Xenokore\OSRS\StatsGenerator\ImageGenerator($skills);
-
+// Set output headers for a non-cached image
 \header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 \header('Last-Modified: ' . \gmdate("D, d M Y H:i:s") . ' GMT');
 \header('Cache-Control: no-store, no-cache, must-revalidate');
@@ -65,4 +80,6 @@ $img_gen = new \Xenokore\OSRS\StatsGenerator\ImageGenerator($skills);
 \header('Pragma: no-cache');
 \header('Content-type: image/png');
 
+// Create and output image
+$img_gen = new \Xenokore\OSRS\StatsGenerator\ImageGenerator($skills);
 echo $img_gen->generate();

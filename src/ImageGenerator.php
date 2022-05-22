@@ -2,36 +2,63 @@
 
 namespace Xenokore\OSRS\StatsGenerator;
 
+/**
+ * Stat image generator class
+ */
 class ImageGenerator
 {
 
+    /**
+     * The Skills object
+     * 
+     * @var Skills
+     */
     private $skills;
 
+    /**
+     * Constructor. Pass a Skills object to set the skills.
+     *
+     * @param ?Skills $skills The skills object
+     * 
+     * @return void
+     */
     public function __construct($skills = null)
     {
-        if(!is_null($skills)) {
+        if (!\is_null($skills)) {
             $this->setSkills($skills);
         }
     }
 
+    /**
+     * Set skills
+     *
+     * @param Skills $skills A Skills object
+     * 
+     * @return void
+     */
     public function setSkills(Skills $skills)
     {
         $this->skills = $skills;
     }
 
+    /**
+     * Generate the stats image using the set skills.
+     *
+     * @return ?string Image output
+     */
     public function generate()
     {
-        if(is_null($this->skills)) {
+        if (\is_null($this->skills)) {
             throw new \Exception('skills not set');
             return 0;
         }
 
         $font = __DIR__ . '/../res/font/Rupee_Foradian.ttf';
 
-        // fetch the base image and create a resource from it
+        // Fetch the base image and create a resource from it
         $img = \imagecreatefrompng(__DIR__ . '/../res/base.png');
         
-        // create the color for the text
+        // Create the color for the text
         $yellow = \imagecolorallocate($img, 255, 255, 51);
 
         $skills = $this->skills->getAllSkills();
@@ -105,18 +132,19 @@ class ImageGenerator
         \imagettftext($img, 8, 0, 36+(1*62), 15+(7*32), $yellow, $font, $skills['hunter'][0]);
         \imagettftext($img, 8, 0, 49+(1*62), 28+(7*32), $yellow, $font, $skills['hunter'][1]);
 
+        // Calculate total level pixel offset
         $total_str_length = \strlen((string)$skills['total']);
-
         $total_str_offset = 7;
-        if($total_str_length === 3) {
+        if ($total_str_length === 3) {
             $total_str_offset = 3;
         }
-        if($total_str_length === 4) {
+        if ($total_str_length === 4) {
             $total_str_offset = 0;
         }
 
         \imagettftext($img, 8, 0, 146 + $total_str_offset, 28+(7*32), $yellow, $font,  $skills['total']);
 
+        // Use a buffer to grab the image output
         \ob_start();
         \imagepng($img);
         \imagedestroy($img);
