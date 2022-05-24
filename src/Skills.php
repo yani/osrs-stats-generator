@@ -64,7 +64,9 @@ class Skills
 
             $skill = \strtolower($skill);
 
-            $this->setSkill($skill, $levels);
+            if(\array_key_exists($skill, $this->skills)) {
+                $this->setSkill($skill, $levels);
+            }
         }
     }
 
