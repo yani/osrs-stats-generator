@@ -35,7 +35,7 @@ You can find a list of skill names below. The total level is calculated automati
 ### Library usage
 
 ```php
-// Either set skills using (array)[<current_lvl>, <max_lvl>] or (string)<level>.
+// Either set skills using (array)[(int)<current_lvl>, (int)<max_lvl>] or (int)<level>.
 // Skills are defaulted to their lowest lvl (10 for hitpoints and 1 for others) and are not required to be set.
 $skills = new \Xenokore\OSRS\StatsGenerator\Skills([
         'hitpoints' => [5, 10],
